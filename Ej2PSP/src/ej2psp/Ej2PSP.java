@@ -15,6 +15,7 @@ public class Ej2PSP {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        //Creación e iniciación de los hilos
         Hilo hilo1 = new Hilo();
         Hilo hilo2 = new Hilo();
         Hilo hilo3 = new Hilo();
