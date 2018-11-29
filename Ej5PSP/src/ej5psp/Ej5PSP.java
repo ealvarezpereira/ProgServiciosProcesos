@@ -15,6 +15,7 @@ public class Ej5PSP {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+       //Creamos el hilo y le pasamos el numero de hilo por parametro
        Hilo h = new Hilo(1);
     }
     
