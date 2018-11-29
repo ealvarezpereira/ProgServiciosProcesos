@@ -13,14 +13,14 @@ import java.util.logging.Logger;
  * @author quique
  */
 public class Bandeja {
-    
+    //Mensaje que leen los lectores y escriben los escritores
     String mensaje = "";
+    //Boolean que dice si hay mensaje o no
     boolean hayMensaje = false;
     
     public synchronized void setMensaje(String mensaje){
-    
+        //Mientras que haya mensaje, el hilo espera
         while(hayMensaje){
-        
             try {
                 wait();
             } catch (InterruptedException ex) {
@@ -28,13 +28,14 @@ public class Bandeja {
             }
         }
         
-        
+        //Le asignamos el mensaje que le mandamos a la variable mensaje.
         this.mensaje = mensaje;
+        //Confirmamos que hay un mensaje para leer
         hayMensaje = true;
     }
     
     public synchronized String getMensaje(){
-        
+        //Mientras que no haya mensaje, el hilo espera
         while(!hayMensaje){
             try {
                 wait();
@@ -43,11 +44,10 @@ public class Bandeja {
             }
         }
         
-        
-        
+        //Una vez recibe el mensaje notifica de que ha leido el mensaje y cambia la variable hayMensaje a false
         notify();
         hayMensaje = false;
-        
+        //Devuelve el mensaje
         return mensaje;
     }
 }

@@ -11,15 +11,19 @@ package ej7psp;
  */
 public class Lectores extends Thread {
 
+    //b Es el objeto de tipo bandeja
     Bandeja b;
+    //numeroHilo es el numero de hilo que escribe
     int numeroHilo;
-
+    
+    //Constructor con parametros
     public Lectores(Bandeja b, int numeroHilo) {
         this.b = b;
         this.numeroHilo = numeroHilo;
     }
-    
-    public void run(){
-        System.out.println("Lee el hilo "+numeroHilo+": "+b.getMensaje());
+
+    public void run() {
+        //Mostramos el hilo que está leyendo y el mensaje que lee
+        System.out.println("Lee el hilo " + numeroHilo + ": " + b.getMensaje());
     }
 }

@@ -10,18 +10,24 @@ package ej7psp;
  * @author quique
  */
 public class Escritores extends Thread {
-        Bandeja b;
+    //b Es el objeto de tipo bandeja
+    Bandeja b;
+    //numeroHilo es el numero de hilo que escribe
     int numeroHilo;
+    //Mensaje es el mensaje que escribe
     String mensaje;
 
-    public Escritores(Bandeja b, int numeroHilo,String mensaje) {
+    //Constructor con parametros
+    public Escritores(Bandeja b, int numeroHilo, String mensaje) {
         this.b = b;
         this.numeroHilo = numeroHilo;
         this.mensaje = mensaje;
     }
-    
-    public void run(){
+
+    public void run() {
+        //Introducimos el mensaje en la bandeja de entrada
         b.setMensaje(mensaje);
-        System.out.println("Escribe el hilo "+numeroHilo);
+        //Mostramos que hilo ha escrito
+        System.out.println("Escribe el hilo " + numeroHilo);
     }
 }
