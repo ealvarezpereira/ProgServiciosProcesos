@@ -15,8 +15,9 @@ public class Ej6PSP {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
+        //Creamos el objeto transicion en el main porque al crearlo en el hilo se crean objetos infinitos
         Transicion t = new Transicion();
+        //Les pasamos el objeto transicion para que puedan acceder a los metodos
         Consumidor c = new Consumidor(t);
         Productor p = new Productor(t);
         
