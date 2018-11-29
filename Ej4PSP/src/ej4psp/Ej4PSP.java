@@ -17,7 +17,7 @@ public class Ej4PSP {
     public static void main(String[] args) {
         SumaMil sm = new SumaMil();
         SumaImpares si = new SumaImpares();
-        SumaDosTres sdt = new SumaDosTres(); //99500
+        SumaDosTres sdt = new SumaDosTres(); 
         
         sm.start();
         si.start();
