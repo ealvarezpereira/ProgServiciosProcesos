@@ -15,6 +15,7 @@ public class Ej1PSP {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        //Creacion de los hilos e iniciación
         Hilo hilo1 = new Hilo();
         Hilo hilo2 = new Hilo();
         hilo1.start();
