@@ -22,6 +22,9 @@ public class SocketServidor {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+
+        int total = 0;
+
         try {
             System.out.println("Creando socket servidor");
 
@@ -41,18 +44,23 @@ public class SocketServidor {
             InputStream is = newSocket.getInputStream();
             OutputStream os = newSocket.getOutputStream();
 
-            for (int i = 0; i < 3; i++) {
-                byte[] mensaje = new byte[64];
+            for (int i = 0; i < 5; i++) {
+                byte[] mensaje = new byte[2];
 
+                //System.out.println(mensaje.toString());
                 is.read(mensaje);
 
                 System.out.println("Mensaje recibido: " + new String(mensaje));
 
-                System.out.println("Enviando mensaje ");
-                String mensajeServidor = ("mensaje desde el servidor " + String.valueOf(i));
-                os.write(mensajeServidor.getBytes());
-                System.out.println("Mensaje enviado");
+                String numero = new String(mensaje);
+                total = total + Integer.parseInt(numero);
+
             }
+
+            System.out.println("Enviando mensaje ");
+            String mensajeServidor = String.valueOf(total);
+            os.write(mensajeServidor.getBytes());
+            System.out.println("Mensaje enviado");
 
             System.out.println("Cerrando el nuevo socket");
 
