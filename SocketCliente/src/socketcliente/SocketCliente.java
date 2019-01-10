@@ -32,18 +32,19 @@ public class SocketCliente {
             InputStream is = clienteSocket.getInputStream();
             OutputStream os = clienteSocket.getOutputStream();
 
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 5; i++) {
+                int numeros = (int) (Math.random() * 100) + 1;
                 System.out.println("Enviando mensaje ");
-                String mensajeCliente = ("mensaje desde el cliente " + String.valueOf(i));
+                String mensajeCliente = String.valueOf(numeros);
+                System.out.println(mensajeCliente);
                 os.write(mensajeCliente.getBytes());
                 System.out.println("Mensaje enviado");
-
-                byte[] mensaje = new byte[64];
-
-                is.read(mensaje);
-
-                System.out.println("Mensaje recibido: " + new String(mensaje));
             }
+
+            byte[] mensaje = new byte[4];
+            is.read(mensaje);
+
+            System.out.println("Mensaje recibido: " + new String(mensaje));
 
             System.out.println("Cerrando el socket cliente");
 
