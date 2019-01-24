@@ -5,6 +5,8 @@
  */
 package pspcalculadoracliente;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author quique
@@ -298,7 +300,7 @@ public class InterfazCalculadora extends javax.swing.JFrame {
     }//GEN-LAST:event_bo0ActionPerformed
 
     //Los if de los botones de las operaciones son para que recoja el primer número que introduces
-    
+
     private void boSumaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boSumaActionPerformed
 
         if (num == 0) {
@@ -343,26 +345,43 @@ public class InterfazCalculadora extends javax.swing.JFrame {
     private void boRaizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boRaizActionPerformed
 
         operacion = "RZZ";
-        m.raiz(cadena, operacion);
+        m.raiz(cadena, operacion, m2);
         cadena = "";
         texto.setText(m.getTotal());
+        m.setTotal("");
+        m2++;
     }//GEN-LAST:event_boRaizActionPerformed
 
     private void boSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boSendActionPerformed
+        //Si enviamos un 00 y pulsamos ok cerramos el servidor.
+        if (texto.getText().equals("00")) {
+            m.cerrar(m2);
+        } else {
+            if (num > 0) {
+                num2 = cadena;
+            }
+            //Bloqueamos poder dividir entre 0
+            if (num1.equals("0") || num2.equals("0") && operacion.equals("DIV")) {
+                JOptionPane.showMessageDialog(this, "No puedes dividir entre 0.");
+                cadena = "";
+                num1 = "";
+                num2 = "";
+                operacion = "";
+                num = 0;
+            } else {
+                //Llamamos al metodo enviarOperacion de la clase MetodosClientes y le pasamos los parametros
+                m.enviarOperacion(num1, num2, operacion, m2);
+                m2++;
+                cadena = "";
+                num1 = "";
+                num2 = "";
+                operacion = "";
 
-        if (num > 0) {
-            num2 = cadena;
+                texto.setText(m.getTotal());
+                m.setTotal("");
+                num = 0;
+            }
         }
-
-        //Llamamos al metodo enviarOperacion de la clase MetodosClientes y le pasamos los parametros
-        m.enviarOperacion(num1, num2, operacion);
-        cadena = "";
-        num1 = "";
-        num2 = "";
-        operacion = "";
-
-        texto.setText(m.getTotal());
-        num = 0;
     }//GEN-LAST:event_boSendActionPerformed
 
     /**
@@ -424,5 +443,6 @@ public class InterfazCalculadora extends javax.swing.JFrame {
     String operacion;
     String num1, num2;
     int num = 0;
+    int m2 = 0;
     MetodosClientes m = new MetodosClientes();
 }

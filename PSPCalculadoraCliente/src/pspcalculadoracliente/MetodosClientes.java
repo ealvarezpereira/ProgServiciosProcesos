@@ -21,10 +21,11 @@ public class MetodosClientes {
 
     Socket clienteSocket;
     String total;
+    InputStream is;
+    OutputStream os;
 
     //Metodo con el que el cliente se conecta al servidor
     public void conexion() {
-
         try {
             System.out.println("Creando socket cliente");
             clienteSocket = new Socket();
@@ -32,57 +33,62 @@ public class MetodosClientes {
 
             InetSocketAddress addr = new InetSocketAddress("localhost", 6666);
             clienteSocket.connect(addr);
+
+            is = clienteSocket.getInputStream();
+            os = clienteSocket.getOutputStream();
         } catch (IOException ex) {
             Logger.getLogger(MetodosClientes.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     /**
-     * 
+     *
      * @param num1 recibe el numero 1 de la interfaz grafica
      * @param num2 recibe el numero 2 de la interfaz grafica
      * @param operacion recibe la operacion de la interfaz grafica
+     * @param m marca para la primera conexion del cliente
      */
-    public void enviarOperacion(String num1, String num2, String operacion) {
-        //Establecemos la conexion
-        conexion();
-
+    public void enviarOperacion(String num1, String num2, String operacion, int m) {
         try {
-            InputStream is = clienteSocket.getInputStream();
-            OutputStream os = clienteSocket.getOutputStream();
+            //Si es el primer calculo se conecta el cliente
+            if (m == 0) {
+                conexion();
+            }
 
-            /*
-            Escribimos el mensaje tal que así -> num1,operacion,num2#
+            /*Escribimos el mensaje tal que así -> num1,operacion,num2#
             El asterisco es porque al definir un array de bytes si el mensaje es menor que elç
             tamaño de dicho array llena con espacios en blanco.
-            */
+             */
             os.write((num1 + "," + operacion + "," + num2 + "#").getBytes());
 
             //Recibimos el total del servidor y lo leemos
-            byte[] mensaje = new byte[2];
+            byte[] mensaje = new byte[64];
             is.read(mensaje);
 
             total = new String(mensaje);
+
+            System.out.println("total: " + total);
         } catch (IOException ex) {
             Logger.getLogger(MetodosClientes.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     /**
-     * 
+     *
      * @param num recibe el numero de la interfaz grafica
      * @param operacion recibe la operacion de la raiz
+     * @param m marca para la primera conexion del cliente
      */
-    
-    public void raiz(String num, String operacion) {
-        //Establecemos la conexion del cliente
-        conexion();
-
+    public void raiz(String num, String operacion, int m) {
         try {
-            InputStream is = clienteSocket.getInputStream();
-            OutputStream os = clienteSocket.getOutputStream();
+            //Si es el primer calculo se conecta el cliente
+            if (m == 0) {
+                conexion();
+            }
+            is = clienteSocket.getInputStream();
+            os = clienteSocket.getOutputStream();
             //Escibimos la secuencia de la raiz
-            os.write((num + "," + operacion+ "#").getBytes());
+            os.write((num + "," + operacion + "#").getBytes());
             //Recibimos el resultado del servidor y lo leemos
             byte[] mensaje = new byte[64];
             is.read(mensaje);
@@ -96,6 +102,26 @@ public class MetodosClientes {
 
     public String getTotal() {
         return total;
+    }
+
+    public void setTotal(String total) {
+        this.total = total;
+    }
+    
+    
+
+    //Metodo que se ejecuta cuando escribes el comando 00 para cerrar el programa.
+    public void cerrar(int m) {
+        try {
+            if (m == 0) {
+                conexion();
+            }
+            OutputStream os = clienteSocket.getOutputStream();
+            os.write("cerrar#".getBytes());
+        } catch (IOException ex) {
+            Logger.getLogger(MetodosClientes.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
 }

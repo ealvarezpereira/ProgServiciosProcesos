@@ -16,7 +16,7 @@ public class PSPCalculadoraCliente {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
+        MetodosClientes m = new MetodosClientes();
         InterfazCalculadora p = new InterfazCalculadora();
         p.setVisible(true);
     } 
