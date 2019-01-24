@@ -22,6 +22,7 @@ public class MetodosClientes {
     Socket clienteSocket;
     String total;
 
+    //Metodo con el que el cliente se conecta al servidor
     public void conexion() {
 
         try {
@@ -36,16 +37,28 @@ public class MetodosClientes {
         }
     }
 
+    /**
+     * 
+     * @param num1 recibe el numero 1 de la interfaz grafica
+     * @param num2 recibe el numero 2 de la interfaz grafica
+     * @param operacion recibe la operacion de la interfaz grafica
+     */
     public void enviarOperacion(String num1, String num2, String operacion) {
-
+        //Establecemos la conexion
         conexion();
 
         try {
             InputStream is = clienteSocket.getInputStream();
             OutputStream os = clienteSocket.getOutputStream();
 
+            /*
+            Escribimos el mensaje tal que así -> num1,operacion,num2#
+            El asterisco es porque al definir un array de bytes si el mensaje es menor que elç
+            tamaño de dicho array llena con espacios en blanco.
+            */
             os.write((num1 + "," + operacion + "," + num2 + "#").getBytes());
 
+            //Recibimos el total del servidor y lo leemos
             byte[] mensaje = new byte[2];
             is.read(mensaje);
 
@@ -55,15 +68,22 @@ public class MetodosClientes {
         }
     }
 
+    /**
+     * 
+     * @param num recibe el numero de la interfaz grafica
+     * @param operacion recibe la operacion de la raiz
+     */
+    
     public void raiz(String num, String operacion) {
+        //Establecemos la conexion del cliente
         conexion();
 
         try {
             InputStream is = clienteSocket.getInputStream();
             OutputStream os = clienteSocket.getOutputStream();
-
+            //Escibimos la secuencia de la raiz
             os.write((num + "," + operacion+ "#").getBytes());
-
+            //Recibimos el resultado del servidor y lo leemos
             byte[] mensaje = new byte[64];
             is.read(mensaje);
 

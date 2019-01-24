@@ -297,6 +297,8 @@ public class InterfazCalculadora extends javax.swing.JFrame {
         texto.setText(cadena);
     }//GEN-LAST:event_bo0ActionPerformed
 
+    //Los if de los botones de las operaciones son para que recoja el primer número que introduces
+    
     private void boSumaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boSumaActionPerformed
 
         if (num == 0) {
@@ -352,6 +354,7 @@ public class InterfazCalculadora extends javax.swing.JFrame {
             num2 = cadena;
         }
 
+        //Llamamos al metodo enviarOperacion de la clase MetodosClientes y le pasamos los parametros
         m.enviarOperacion(num1, num2, operacion);
         cadena = "";
         num1 = "";
