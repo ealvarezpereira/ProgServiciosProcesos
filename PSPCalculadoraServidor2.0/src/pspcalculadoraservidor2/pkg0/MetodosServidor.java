@@ -13,7 +13,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -33,23 +32,24 @@ public class MetodosServidor {
     Socket newSocket;
     String cadena = "";
     OutputStream os;
-    public static boolean m = false;
+    public static boolean m = true;
 
     //Metodo con el que establecemos la conexion servidor
     public void conexion() {
         try {
-            while (true) {
+            
                 System.out.println("Creando socket servidor");
                 //Creamos el socket
                 serverSocket = new ServerSocket();
 
                 System.out.println("Realizando el bind");
                 //Nos conectamos con el socket a la ip
-                String puerto = JOptionPane.showInputDialog("Introduce el puerto");
-                InetSocketAddress addr = new InetSocketAddress("localhost", Integer.parseInt(puerto));
+                //String puerto = JOptionPane.showInputDialog("Introduce el puerto");
+                InetSocketAddress addr = new InetSocketAddress("localhost", 6666);
                 serverSocket.bind(addr);
 
                 System.out.println("Aceptando conexiones");
+                while (true) {
                 //Aceptamos conexiones de clientes
                 newSocket = serverSocket.accept();
                 System.out.println("Conexion recibida");
@@ -58,11 +58,12 @@ public class MetodosServidor {
                 InputStream is = newSocket.getInputStream();
                 os = newSocket.getOutputStream();
 
+                //Creamos un hilo por cada cliente
                 hilo h = new hilo(os, is);
                 h.start();
 
                 //Cuando envías la señal de apagado sale del bucle y sale del servidor
-                if (m = false) {
+                if (m == false) {
                     System.out.println("Cerrando el nuevo socket");
                     newSocket.close();
 
