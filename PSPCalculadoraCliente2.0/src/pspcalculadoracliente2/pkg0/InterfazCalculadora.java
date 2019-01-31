@@ -388,7 +388,7 @@ public class InterfazCalculadora extends javax.swing.JFrame {
                 num2 = cadena;
             }
             //Bloqueamos poder dividir entre 0
-            if (num1.equals("0") || num2.equals("0") && operacion.equals("DIV")) {
+            if (num2.equals("0") && operacion.equals("DIV")) {
                 JOptionPane.showMessageDialog(this, "No puedes dividir entre 0.");
                 cadena = "";
                 num1 = "";
