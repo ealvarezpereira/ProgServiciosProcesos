@@ -25,13 +25,14 @@ public class MetodosClientes {
     OutputStream os;
 
     //Metodo con el que el cliente se conecta al servidor
-    public void conexion() {
+    public void conexion(String npuerto) {
         try {
             System.out.println("Creando socket cliente");
             clienteSocket = new Socket();
             System.out.println("Estableciendo la conexion");
 
-            InetSocketAddress addr = new InetSocketAddress("localhost", 6666);
+            
+            InetSocketAddress addr = new InetSocketAddress("localhost", Integer.parseInt(npuerto));
             clienteSocket.connect(addr);
 
             is = clienteSocket.getInputStream();
@@ -50,11 +51,7 @@ public class MetodosClientes {
      */
     public void enviarOperacion(String num1, String num2, String operacion, int m) {
         try {
-            //Si es el primer calculo se conecta el cliente
-            if (m == 0) {
-                conexion();
-            }
-
+            
             /*Escribimos el mensaje tal que así -> num1,operacion,num2#
             El asterisco es porque al definir un array de bytes si el mensaje es menor que elç
             tamaño de dicho array llena con espacios en blanco.
@@ -81,10 +78,6 @@ public class MetodosClientes {
      */
     public void raiz(String num, String operacion, int m) {
         try {
-            //Si es el primer calculo se conecta el cliente
-            if (m == 0) {
-                conexion();
-            }
             is = clienteSocket.getInputStream();
             os = clienteSocket.getOutputStream();
             //Escibimos la secuencia de la raiz
@@ -113,9 +106,6 @@ public class MetodosClientes {
     //Metodo que se ejecuta cuando escribes el comando 00 para cerrar el programa.
     public void cerrar(int m) {
         try {
-            if (m == 0) {
-                conexion();
-            }
             OutputStream os = clienteSocket.getOutputStream();
             os.write("cerrar#".getBytes());
         } catch (IOException ex) {

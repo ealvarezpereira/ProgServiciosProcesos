@@ -13,6 +13,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -32,40 +33,45 @@ public class MetodosServidor {
     Socket newSocket;
     String cadena = "";
     OutputStream os;
+    public static boolean m = false;
 
     //Metodo con el que establecemos la conexion servidor
     public void conexion() {
         try {
-            System.out.println("Creando socket servidor");
-            //Creamos el socket
-            serverSocket = new ServerSocket();
+            while (true) {
+                System.out.println("Creando socket servidor");
+                //Creamos el socket
+                serverSocket = new ServerSocket();
 
-            System.out.println("Realizando el bind");
-            //Nos conectamos con el socket a la ip
-            InetSocketAddress addr = new InetSocketAddress("localhost", 6666);
-            serverSocket.bind(addr);
+                System.out.println("Realizando el bind");
+                //Nos conectamos con el socket a la ip
+                String puerto = JOptionPane.showInputDialog("Introduce el puerto");
+                InetSocketAddress addr = new InetSocketAddress("localhost", Integer.parseInt(puerto));
+                serverSocket.bind(addr);
 
-            System.out.println("Aceptando conexiones");
-            //Aceptamos conexiones de clientes
-            newSocket = serverSocket.accept();
-            System.out.println("Conexion recibida");
+                System.out.println("Aceptando conexiones");
+                //Aceptamos conexiones de clientes
+                newSocket = serverSocket.accept();
+                System.out.println("Conexion recibida");
 
-            //Abrimos el input y el output
-            InputStream is = newSocket.getInputStream();
-            os = newSocket.getOutputStream();
+                //Abrimos el input y el output
+                InputStream is = newSocket.getInputStream();
+                os = newSocket.getOutputStream();
 
-            hilo h = new hilo(os,is);
-            h.start();
-            
-            //Cuando envías la señal de apagado sale del bucle y sale del servidor
-            System.out.println("Cerrando el nuevo socket");
-            newSocket.close();
+                hilo h = new hilo(os, is);
+                h.start();
 
-            System.out.println("Cerrando el socket servidor");
-            serverSocket.close();
+                //Cuando envías la señal de apagado sale del bucle y sale del servidor
+                if (m = false) {
+                    System.out.println("Cerrando el nuevo socket");
+                    newSocket.close();
 
-            System.out.println("Terminado");
+                    System.out.println("Cerrando el socket servidor");
+                    serverSocket.close();
 
+                    System.out.println("Terminado");
+                }
+            }
         } catch (IOException ex) {
             Logger.getLogger(PSPCalculadoraServidor.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -140,6 +146,8 @@ class hilo extends Thread {
                             os.write(String.valueOf(total = Math.sqrt(Double.parseDouble(cad[0]))).getBytes());
                             break;
                     }
+                } else {
+                    MetodosServidor.m = false;
                 }
             } catch (IOException ex) {
                 Logger.getLogger(hilo.class.getName()).log(Level.SEVERE, null, ex);
