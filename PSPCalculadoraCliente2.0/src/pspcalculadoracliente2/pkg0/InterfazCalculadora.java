@@ -382,7 +382,7 @@ public class InterfazCalculadora extends javax.swing.JFrame {
     private void boSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boSendActionPerformed
         //Si enviamos un 00 y pulsamos ok cerramos el servidor.
         if (texto.getText().equals("00")) {
-            m.cerrar(m2);
+            m.cerrar();
         } else {
             if (num > 0) {
                 num2 = cadena;

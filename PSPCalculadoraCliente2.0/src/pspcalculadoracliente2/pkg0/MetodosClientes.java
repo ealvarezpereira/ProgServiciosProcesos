@@ -104,10 +104,16 @@ public class MetodosClientes {
     
 
     //Metodo que se ejecuta cuando escribes el comando 00 para cerrar el programa.
-    public void cerrar(int m) {
+    public void cerrar() {
         try {
-            OutputStream os = clienteSocket.getOutputStream();
-            os.write("cerrar#".getBytes());
+            //OutputStream os = clienteSocket.getOutputStream();
+            //os.write("cerrar#".getBytes());
+            is.close();
+            os.close();
+            clienteSocket.close();
+            System.exit(0);
+            
+            
         } catch (IOException ex) {
             Logger.getLogger(MetodosClientes.class.getName()).log(Level.SEVERE, null, ex);
         }

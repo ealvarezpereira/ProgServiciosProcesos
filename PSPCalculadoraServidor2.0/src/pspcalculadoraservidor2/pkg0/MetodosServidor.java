@@ -37,19 +37,19 @@ public class MetodosServidor {
     //Metodo con el que establecemos la conexion servidor
     public void conexion() {
         try {
-            
-                System.out.println("Creando socket servidor");
-                //Creamos el socket
-                serverSocket = new ServerSocket();
 
-                System.out.println("Realizando el bind");
-                //Nos conectamos con el socket a la ip
-                //String puerto = JOptionPane.showInputDialog("Introduce el puerto");
-                InetSocketAddress addr = new InetSocketAddress("localhost", 6666);
-                serverSocket.bind(addr);
+            System.out.println("Creando socket servidor");
+            //Creamos el socket
+            serverSocket = new ServerSocket();
 
-                System.out.println("Aceptando conexiones");
-                while (true) {
+            System.out.println("Realizando el bind");
+            //Nos conectamos con el socket a la ip
+            //String puerto = JOptionPane.showInputDialog("Introduce el puerto");
+            InetSocketAddress addr = new InetSocketAddress("localhost", 6666);
+            serverSocket.bind(addr);
+
+            System.out.println("Aceptando conexiones");
+            while (true) {
                 //Aceptamos conexiones de clientes
                 newSocket = serverSocket.accept();
                 System.out.println("Conexion recibida");
@@ -62,16 +62,6 @@ public class MetodosServidor {
                 hilo h = new hilo(os, is);
                 h.start();
 
-                //Cuando envías la señal de apagado sale del bucle y sale del servidor
-                if (m == false) {
-                    System.out.println("Cerrando el nuevo socket");
-                    newSocket.close();
-
-                    System.out.println("Cerrando el socket servidor");
-                    serverSocket.close();
-
-                    System.out.println("Terminado");
-                }
             }
         } catch (IOException ex) {
             Logger.getLogger(PSPCalculadoraServidor.class.getName()).log(Level.SEVERE, null, ex);
@@ -119,37 +109,34 @@ class hilo extends Thread {
                 System.out.println("Mensaje recibido: " + msg[0]);
                 cadena = msg[0];
                 //Llamamos al metodo enviarMensaje() si el texto no es cerrar
-                if (!cadena.equalsIgnoreCase("cerrar")) {
 
-                    String[] cad = new String[3];
-                    cad = cadena.split(",");
+                String[] cad = new String[3];
+                cad = cadena.split(",");
 
-                    /*   Hacemos un switch donde comparamos la operación
+                /*   Hacemos un switch donde comparamos la operación
                         Si es SUM recoge los numeros, los suma y envía el resultado al cliente
                         Si es RES recoge los numeros, los resta y envía el resultado al cliente
                         Si es MULT recoge los numeros, los multiplica y envía el resultado al cliente
                         Si es DIV recoge los numeros, los divide y envía el resultado al cliente
-                     */
-                    switch (cad[1]) {
-                        case "SUM":
-                            os.write(String.valueOf(total = Double.parseDouble(cad[0]) + Double.parseDouble(cad[2])).getBytes());
-                            break;
-                        case "RES":
-                            os.write(String.valueOf(total = Double.parseDouble(cad[0]) - Double.parseDouble(cad[2])).getBytes());
-                            break;
-                        case "MULT":
-                            os.write(String.valueOf(total = Double.parseDouble(cad[0]) * Double.parseDouble(cad[2])).getBytes());
-                            break;
-                        case "DIV":
-                            os.write(String.valueOf(total = Double.parseDouble(cad[0]) / Double.parseDouble(cad[2])).getBytes());
-                            break;
-                        case "RZZ":
-                            os.write(String.valueOf(total = Math.sqrt(Double.parseDouble(cad[0]))).getBytes());
-                            break;
-                    }
-                } else {
-                    MetodosServidor.m = false;
+                 */
+                switch (cad[1]) {
+                    case "SUM":
+                        os.write(String.valueOf(total = Double.parseDouble(cad[0]) + Double.parseDouble(cad[2])).getBytes());
+                        break;
+                    case "RES":
+                        os.write(String.valueOf(total = Double.parseDouble(cad[0]) - Double.parseDouble(cad[2])).getBytes());
+                        break;
+                    case "MULT":
+                        os.write(String.valueOf(total = Double.parseDouble(cad[0]) * Double.parseDouble(cad[2])).getBytes());
+                        break;
+                    case "DIV":
+                        os.write(String.valueOf(total = Double.parseDouble(cad[0]) / Double.parseDouble(cad[2])).getBytes());
+                        break;
+                    case "RZZ":
+                        os.write(String.valueOf(total = Math.sqrt(Double.parseDouble(cad[0]))).getBytes());
+                        break;
                 }
+
             } catch (IOException ex) {
                 Logger.getLogger(hilo.class.getName()).log(Level.SEVERE, null, ex);
             }
