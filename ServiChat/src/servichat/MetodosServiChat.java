@@ -41,7 +41,7 @@ public class MetodosServiChat {
 
             System.out.println("Aceptando conexiones");
 
-            for (int i = 0; i < 10; i++) {
+            while (true) { //Cambiar para no permitir mas conexiones
 
                 //Aceptamos conexiones de clientes
                 newSocket = serverSocket.accept();
@@ -56,7 +56,7 @@ public class MetodosServiChat {
                 h.start();
             }
 
-            JOptionPane.showMessageDialog(null, "No hay mas conexiones disponibles");
+            //JOptionPane.showMessageDialog(null, "No hay mas conexiones disponibles");
         } catch (IOException ex) {
             Logger.getLogger(ServiChat.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -68,10 +68,10 @@ class hilo extends Thread {
     String cadena = "";
     OutputStream os;
     InputStream is;
-    boolean bol = true;
     //Igualamos las variables auxiliares al mensaje que recibimos de los clientes
     String mensajeAEnviar = MetodosServiChat.mensaje;
     String comprobacion = MetodosServiChat.mensaje;
+    byte[] mensajeQueRecibes;
 
     public hilo() {
     }
@@ -83,11 +83,10 @@ class hilo extends Thread {
 
     public void run() {
         //arraymensaje es el array de bytes que recoge el servidor del cliente
-        byte[] mensajeQueRecibes = new byte[1024];
 
         //Mientras que no envíes una señal de cerrado el programa sigue esperando mensajes
-        while (!cadena.equalsIgnoreCase("/bye")) {
-            
+        while (true) {
+
             if (!comprobacion.equalsIgnoreCase(MetodosServiChat.mensaje)) {
                 comprobacion = MetodosServiChat.mensaje;
                 mensajeAEnviar = MetodosServiChat.mensaje;
@@ -101,11 +100,13 @@ class hilo extends Thread {
                     }
 
                 } else {
+                    mensajeQueRecibes = new byte[1024];
+
                     //con el stream imput leemos el array de bytes
                     is.read(mensajeQueRecibes);
                     //Creamos un string a partir del mensaje leido con el is.read()
                     String cerrar = new String(mensajeQueRecibes);
-
+                    System.out.println("Cerrar: " + cerrar);
                     /*
                      Creamos un array String puesto que el mensaje que nos llega tiene un # al final
                      debido a que al definir el array de bytes si el tamaño es mayor que el mensaje
@@ -118,10 +119,11 @@ class hilo extends Thread {
                     MetodosServiChat.mensaje = msg[0] + "\n";
                     enviar();
                     comprobacion = MetodosServiChat.mensaje;
+                    MetodosServiChat.mensaje = "";
                 }
 
-            } catch (IOException ex) {
-                Logger.getLogger(hilo.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                break;
             }
         }
     }
@@ -130,8 +132,12 @@ class hilo extends Thread {
         try {
             os.write((MetodosServiChat.mensaje + "#").getBytes());
             mensajeAEnviar = "@";
-        } catch (IOException ex) {
-            Logger.getLogger(hilo.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            try {
+                os.close();
+            } catch (IOException ex1) {
+                Logger.getLogger(hilo.class.getName()).log(Level.SEVERE, null, ex1);
+            }
         }
     }
 }
