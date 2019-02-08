@@ -55,7 +55,7 @@ public class MetodosClientes {
                 //Escribimos un mensaje con la fecha, el nick y el mensaje del cliente
                 os.write((fecha + " " + this.nickname + ": " + mensaje + "#").getBytes());
             } else {
-                os.write((this.nickname + " Ha cerrado sesión.").getBytes());
+                os.write((this.nickname + " Ha cerrado sesión.#").getBytes());
                 os.close();
                 is.close();
                 clienteSocket.close();
