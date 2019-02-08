@@ -135,8 +135,10 @@ public class InterfazChat extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void boConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boConectarActionPerformed
-
-        //Boton para la conexion. Si la ip o el puerto están vacíos que no deje conectarse
+        /**
+         * Boton para la conexion. Si la ip o el puerto están vacíos que no deje
+         * conectarse
+         */
         if (txtIP.getText().equalsIgnoreCase("")
                 || txtIP.getText().isEmpty()
                 || txtPuerto.getText().isEmpty()
@@ -159,8 +161,11 @@ public class InterfazChat extends javax.swing.JFrame {
     }//GEN-LAST:event_boConectarActionPerformed
 
     private void boEnviarMsgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boEnviarMsgActionPerformed
-        //Si el txtMensaje está vacío muestra un mensaje que dice que introduzcas un mensaje
-        //Si no llama al método enviar mensaje de la clase MetodosClientes
+        /**
+         * Si el txtMensaje está vacío muestra un mensaje que dice que
+         * introduzcas un mensaje Si no llama al método enviar mensaje de la
+         * clase MetodosClientes.
+         */
         if (txtMensaje.getText().isEmpty() || txtMensaje.getText().equalsIgnoreCase("")) {
             JOptionPane.showMessageDialog(this, "Escribe un mensaje");
         } else {
@@ -240,9 +245,9 @@ public class InterfazChat extends javax.swing.JFrame {
         txtMensaje.setEditable(false);
         boEnviarMsg.setEnabled(false);
         txtInformativo.setVisible(false);
-        /* 
-         * Metodo importado de la libreria xswingx que muestra un mensaje predeterminado en el
-         * textfield donde introduces el mensaje.
+        /**
+         * Metodo importado de la libreria xswingx que muestra un mensaje
+         * predeterminado en el textfield donde introduces el mensaje.
          */
         PromptSupport.setPrompt("Escribe un mensaje", txtMensaje);
     }
@@ -259,9 +264,12 @@ class hilo extends Thread {
 
     @Override
     public void run() {
-
+        /**
+         * Hilo en el cliente que sirve para quedarse siempre recibiendo
+         * mensajes.
+         */
         while (true) {
-            InterfazChat.txtPantallaChat.setText(InterfazChat.txtPantallaChat.getText()+m.recibirMensaje());
+            InterfazChat.txtPantallaChat.setText(InterfazChat.txtPantallaChat.getText() + m.recibirMensaje());
         }
     }
 }

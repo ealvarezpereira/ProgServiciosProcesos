@@ -26,7 +26,12 @@ public class MetodosClientes {
     OutputStream os;
     InterfazChat intc;
 
-    //Metodo con el que el cliente se conecta al servidor
+    /**
+     * Meotodo para la conexion al servidor.
+     * @param ip es la ip del servidor.
+     * @param npuerto es el numero de puerto del servidor.
+     * @param nickname es el nombre de usuario del cliente.
+     */
     public void conexion(String ip, String npuerto, String nickname) {
         try {
             this.nickname = nickname;
@@ -46,6 +51,11 @@ public class MetodosClientes {
             Logger.getLogger(MetodosClientes.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    /**
+     * Método que envía el mensaje que recibe de la interfaz al servidor.
+     * @param mensaje es el mensaje que recibe.
+     */
 
     public void enviarMensaje(String mensaje) {
         try {
@@ -55,6 +65,7 @@ public class MetodosClientes {
                 //Escribimos un mensaje con la fecha, el nick y el mensaje del cliente
                 os.write((fecha + " " + this.nickname + ": " + mensaje + "#").getBytes());
             } else {
+                //Si recibe el comando /bye se cierra el cliente.
                 os.write((this.nickname + " Ha cerrado sesión.#").getBytes());
                 os.close();
                 is.close();
@@ -67,6 +78,11 @@ public class MetodosClientes {
         }
     }
 
+    /**
+     * Recibe el mensaje que devuelve el servidor y lo retorna
+     * a la interfaz gráfica para mostrarlo.
+     * @return mspliteado[0] es el mensaje con el split.
+     */
     public String recibirMensaje() {
         byte[] mRecibido = new byte[1024];
         String[] mSpliteado = new String[2];
