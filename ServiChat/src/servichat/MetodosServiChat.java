@@ -13,7 +13,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -25,6 +24,7 @@ public class MetodosServiChat {
     ServerSocket serverSocket;
     Socket newSocket;
     OutputStream os;
+    public static int nConexiones = 0;
 
     //Metodo con el que establecemos la conexion servidor
     public void conexion() {
@@ -42,7 +42,7 @@ public class MetodosServiChat {
             System.out.println("Aceptando conexiones");
 
             while (true) { //Cambiar para no permitir mas conexiones
-
+                if (nConexiones <=10) {
                 //Aceptamos conexiones de clientes
                 newSocket = serverSocket.accept();
                 System.out.println("Conexion recibida");
@@ -54,6 +54,8 @@ public class MetodosServiChat {
                 //Creamos un hilo por cada cliente
                 hilo h = new hilo(os, is);
                 h.start();
+                nConexiones++;
+                }
             }
 
             //JOptionPane.showMessageDialog(null, "No hay mas conexiones disponibles");
@@ -82,11 +84,9 @@ class hilo extends Thread {
     }
 
     public void run() {
-        //arraymensaje es el array de bytes que recoge el servidor del cliente
 
-        //Mientras que no envíes una señal de cerrado el programa sigue esperando mensajes
         while (true) {
-
+            //Si el mensaje que recibes es distinto que el mensaje anterior sobreescribe el mensaje.
             if (!comprobacion.equalsIgnoreCase(MetodosServiChat.mensaje)) {
                 comprobacion = MetodosServiChat.mensaje;
                 mensajeAEnviar = MetodosServiChat.mensaje;
@@ -95,6 +95,7 @@ class hilo extends Thread {
             try {
                 if (is.available() == 0) {
 
+                    //Si hay algun mensaje ya recibido lo escribe directamente.
                     if (!mensajeAEnviar.equalsIgnoreCase("@")) {
                         enviar();
                     }
@@ -107,15 +108,21 @@ class hilo extends Thread {
                     //Creamos un string a partir del mensaje leido con el is.read()
                     String cerrar = new String(mensajeQueRecibes);
                     System.out.println("Cerrar: " + cerrar);
-                    /*
+                    /**
                      Creamos un array String puesto que el mensaje que nos llega tiene un # al final
                      debido a que al definir el array de bytes si el tamaño es mayor que el mensaje
-                     mete espacios en blanco. Entonces hacemos un split de #
+                     mete espacios en blanco, Entonces hacemos un split de #.
                      */
                     String[] msg = new String[2];
                     msg = cerrar.split("#");
 
                     System.out.println("Mensaje recibido: " + msg[0]);
+                    
+                    //Si alguien cierra sesión que no permita más conexiones.
+                    if (msg[0].contains("Ha cerrado sesión.")) {
+                        MetodosServiChat.nConexiones--;
+                    }
+                    
                     MetodosServiChat.mensaje = msg[0] + "\n";
                     enviar();
                     comprobacion = MetodosServiChat.mensaje;
@@ -131,6 +138,7 @@ class hilo extends Thread {
     public void enviar() {
         try {
             os.write((MetodosServiChat.mensaje + "#").getBytes());
+            //Le asignamos el valor "@" para avisar de que el mensaje ha sido enviado.
             mensajeAEnviar = "@";
         } catch (Exception ex) {
             try {
