@@ -41,7 +41,7 @@ public class MetodosServiChat {
 
             System.out.println("Aceptando conexiones");
 
-            while (true) { //Cambiar para no permitir mas conexiones
+            while (true) {
                 if (nConexiones <=10) {
                 //Aceptamos conexiones de clientes
                 newSocket = serverSocket.accept();
@@ -58,7 +58,6 @@ public class MetodosServiChat {
                 }
             }
 
-            //JOptionPane.showMessageDialog(null, "No hay mas conexiones disponibles");
         } catch (IOException ex) {
             Logger.getLogger(ServiChat.class.getName()).log(Level.SEVERE, null, ex);
         }
