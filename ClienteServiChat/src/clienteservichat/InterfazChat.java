@@ -136,8 +136,8 @@ public class InterfazChat extends javax.swing.JFrame {
 
     private void boConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boConectarActionPerformed
         /**
-         * Boton para la conexion. Si la ip o el puerto están vacíos que no deje
-         * conectarse
+         * Boton para la conexion, Si la ip o el puerto están vacíos que no deje
+         * conectarse.
          */
         if (txtIP.getText().equalsIgnoreCase("")
                 || txtIP.getText().isEmpty()
