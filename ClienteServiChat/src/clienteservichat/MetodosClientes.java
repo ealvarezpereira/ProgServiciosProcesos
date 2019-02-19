@@ -13,6 +13,7 @@ import java.net.Socket;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -28,35 +29,38 @@ public class MetodosClientes {
 
     /**
      * Meotodo para la conexion al servidor.
+     *
      * @param ip es la ip del servidor.
      * @param npuerto es el numero de puerto del servidor.
      * @param nickname es el nombre de usuario del cliente.
      */
-    public void conexion(String ip, String npuerto, String nickname) {
+    public void conexion(String ip, int npuerto, String nickname) {
         try {
             this.nickname = nickname;
             System.out.println("Creando socket cliente");
             clienteSocket = new Socket();
             System.out.println("Estableciendo la conexion");
 
-            InetSocketAddress addr = new InetSocketAddress("localhost", 6666);
+            InetSocketAddress addr = new InetSocketAddress(ip, npuerto);
+
             clienteSocket.connect(addr);
 
-            is = clienteSocket.getInputStream();
-            os = clienteSocket.getOutputStream();
+                is = clienteSocket.getInputStream();
+                os = clienteSocket.getOutputStream();
 
-            //Enviamos el nickname del cliente que se ha conectado.
-            os.write((this.nickname + " ha iniciado sesión.#").getBytes());
+                //Enviamos el nickname del cliente que se ha conectado.
+                os.write((this.nickname + " ha iniciado sesión.#").getBytes());
+                System.out.println("Sesion iniciada correctamente.");
         } catch (IOException ex) {
-            Logger.getLogger(MetodosClientes.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "El servidor está cerrado.");
+            System.exit(0);
         }
     }
-    
+
     /**
      * Método que envía el mensaje que recibe de la interfaz al servidor.
      * @param mensaje es el mensaje que recibe.
      */
-
     public void enviarMensaje(String mensaje) {
         try {
             if (!mensaje.equalsIgnoreCase("/bye")) {
@@ -75,12 +79,14 @@ public class MetodosClientes {
 
         } catch (IOException ex) {
             Logger.getLogger(MetodosClientes.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Servidor cerrado.");
+            System.exit(0);
         }
     }
 
     /**
-     * Recibe el mensaje que devuelve el servidor y lo retorna
-     * a la interfaz gráfica para mostrarlo.
+     * Recibe el mensaje que devuelve el servidor y lo retorna a la interfaz
+     * gráfica para mostrarlo.
      * @return mspliteado[0] es el mensaje con el split.
      */
     public String recibirMensaje() {
@@ -97,6 +103,6 @@ public class MetodosClientes {
             Logger.getLogger(MetodosClientes.class.getName()).log(Level.SEVERE, null, ex);
         }
         return mSpliteado[0];
-    }
+    } 
 
 }

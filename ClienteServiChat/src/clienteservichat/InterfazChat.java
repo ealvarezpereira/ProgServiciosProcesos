@@ -45,6 +45,11 @@ public class InterfazChat extends javax.swing.JFrame {
         txtInformativo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                cerrarConexion(evt);
+            }
+        });
 
         boConectar.setText("Conectar");
         boConectar.addActionListener(new java.awt.event.ActionListener() {
@@ -108,7 +113,7 @@ public class InterfazChat extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(txtInformativo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,12 +150,9 @@ public class InterfazChat extends javax.swing.JFrame {
                 || txtPuerto.getText().equalsIgnoreCase("")) {
             txtInformativo.setVisible(true);
         } else {
-            boConectar.setEnabled(false);
+            m.conexion(txtIP.getText(), Integer.parseInt(txtPuerto.getText()), nickname);
             boEnviarMsg.setEnabled(true);
             txtMensaje.setEditable(true);
-
-            m.conexion(txtIP.getText(), txtPuerto.getText(), nickname);
-
             txtIP.setText("");
             txtPuerto.setText("");
             txtPuerto.setEditable(false);
@@ -173,6 +175,23 @@ public class InterfazChat extends javax.swing.JFrame {
             txtMensaje.setText("");
         }
     }//GEN-LAST:event_boEnviarMsgActionPerformed
+
+    
+    /**
+     * Metodo que sirve para confirmar si quieres cerrar el programa cuando pulsas la x
+     * y que envía un mensaje de cerrado al servidor si lo haces.
+     * @param evt Evento del boton X.
+     */
+    private void cerrarConexion(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_cerrarConexion
+
+        if (JOptionPane.showConfirmDialog(null, "Desea salir del chat?",
+                "Salir de la aplicación",
+                JOptionPane.YES_NO_OPTION)
+                == JOptionPane.YES_OPTION) {
+            m.enviarMensaje("/bye");
+            System.exit(0);
+        }
+    }//GEN-LAST:event_cerrarConexion
 
     /**
      * @param args the command line arguments
@@ -240,8 +259,9 @@ public class InterfazChat extends javax.swing.JFrame {
      * añadiendo un titulo con el nickname al frame.
      */
     private void opcionesInterfaz() {
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         this.setLocationRelativeTo(null);
-        this.setTitle("Bienvenido " + nickname + "!");
+        this.setTitle("Bienvenido/a " + nickname + "!");
         txtMensaje.setEditable(false);
         boEnviarMsg.setEnabled(false);
         txtInformativo.setVisible(false);
@@ -257,6 +277,7 @@ public class InterfazChat extends javax.swing.JFrame {
 class hilo extends Thread {
 
     MetodosClientes m;
+    String msg;
 
     public hilo(MetodosClientes m) {
         this.m = m;
@@ -269,7 +290,8 @@ class hilo extends Thread {
          * mensajes.
          */
         while (true) {
-            InterfazChat.txtPantallaChat.setText(InterfazChat.txtPantallaChat.getText() + m.recibirMensaje());
+            msg = m.recibirMensaje();
+            InterfazChat.txtPantallaChat.setText(InterfazChat.txtPantallaChat.getText() + msg);
         }
     }
 }
