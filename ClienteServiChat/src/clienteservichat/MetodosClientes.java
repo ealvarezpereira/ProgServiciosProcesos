@@ -45,12 +45,12 @@ public class MetodosClientes {
 
             clienteSocket.connect(addr);
 
-                is = clienteSocket.getInputStream();
-                os = clienteSocket.getOutputStream();
+            is = clienteSocket.getInputStream();
+            os = clienteSocket.getOutputStream();
 
-                //Enviamos el nickname del cliente que se ha conectado.
-                os.write((this.nickname + " ha iniciado sesión.#").getBytes());
-                System.out.println("Sesion iniciada correctamente.");
+            //Enviamos el nickname del cliente que se ha conectado.
+            os.write((this.nickname + " ha iniciado sesión.#").getBytes());
+            System.out.println("Sesion iniciada correctamente.");
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "El servidor está cerrado.");
             System.exit(0);
@@ -59,6 +59,7 @@ public class MetodosClientes {
 
     /**
      * Método que envía el mensaje que recibe de la interfaz al servidor.
+     *
      * @param mensaje es el mensaje que recibe.
      */
     public void enviarMensaje(String mensaje) {
@@ -70,7 +71,7 @@ public class MetodosClientes {
                 os.write((fecha + " " + this.nickname + ": " + mensaje + "#").getBytes());
             } else {
                 //Si recibe el comando /bye se cierra el cliente.
-                os.write((this.nickname + " Ha cerrado sesión.#").getBytes());
+                os.write((this.nickname + " Ha cerrado sesión.#/bye#").getBytes());
                 os.close();
                 is.close();
                 clienteSocket.close();
@@ -87,6 +88,7 @@ public class MetodosClientes {
     /**
      * Recibe el mensaje que devuelve el servidor y lo retorna a la interfaz
      * gráfica para mostrarlo.
+     *
      * @return mspliteado[0] es el mensaje con el split.
      */
     public String recibirMensaje() {
@@ -98,11 +100,19 @@ public class MetodosClientes {
             msg = new String(mRecibido);
 
             mSpliteado = msg.split("#");
+            if (mSpliteado[1].contains("/cerrarCliente")) {
+                JOptionPane.showMessageDialog(null,"No se ha podido conectar, demasiados usuarios.");
+                is.close();
+                os.close();
+                clienteSocket.close();
+                System.exit(0);
+            }
 
         } catch (IOException ex) {
             Logger.getLogger(MetodosClientes.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Servidor cerrado.");
         }
         return mSpliteado[0];
-    } 
+    }
 
 }
